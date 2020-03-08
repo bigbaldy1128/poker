@@ -1,6 +1,6 @@
 package com.bigbaldy.poker.exception;
 
-import com.bigbaldy.poker.web.response.ResultVO;
+import com.bigbaldy.poker.resource.ResponseResource;
 
 public abstract class AbstractUncheckedException extends RuntimeException {
     private static final long serialVersionUID = 9185363771965400078L;
@@ -28,10 +28,10 @@ public abstract class AbstractUncheckedException extends RuntimeException {
     }
 
     /**
-     * @return eg: (module_code=1,error_code=2) => 101002
+     * @return eg: (module_code=101,error_code=2) => 101002
      */
     public final int getCode() {
-        return (100 + this.getModuleCode()) * 1000 + this.errorInfo.getCode();
+        return this.getModuleCode() * 1000 + this.errorInfo.getCode();
     }
 
     @Override
@@ -39,8 +39,8 @@ public abstract class AbstractUncheckedException extends RuntimeException {
         return errorInfo.getMessage();
     }
 
-    public ResultVO toResult() {
-        return ResultVO.builder()
+    public ResponseResource toResult() {
+        return ResponseResource.builder()
                 .code(this.getCode())
                 .message(this.getMessage())
                 .build();

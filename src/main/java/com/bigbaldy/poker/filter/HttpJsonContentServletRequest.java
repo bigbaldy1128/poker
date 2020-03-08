@@ -29,7 +29,9 @@ public class HttpJsonContentServletRequest extends HttpServletRequestWrapper {
   @Override
   public BufferedReader getReader() throws IOException {
     String enc = getCharacterEncoding();
-    if (enc == null) enc = "UTF-8";
+    if (enc == null) {
+      enc = "UTF-8";
+    }
     return new BufferedReader(new InputStreamReader(this.getInputStream(), enc));
   }
 

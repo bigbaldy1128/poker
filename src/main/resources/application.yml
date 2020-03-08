@@ -25,3 +25,9 @@ swagger:
     name: wangjinzhao
   base-package: com.bigbaldy
   base-path: /**
+poker:
+  web:
+    public-apis:
+      - /health
+      - /api/v1/users/login
+      - /api/public/**

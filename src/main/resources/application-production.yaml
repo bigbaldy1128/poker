@@ -1,2 +1,10 @@
 server:
   port: 443
+  ssl:
+    key-store: keystore.p12
+    key-store-password: jkjk7357
+    keyStoreType: PKCS12
+    keyAlias: poker
+secret:
+  auth:
+    jwt-secret: "81X/*dfwqqfgoV5msdgb@3*e#1"

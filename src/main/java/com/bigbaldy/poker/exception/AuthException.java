@@ -1,6 +1,5 @@
 package com.bigbaldy.poker.exception;
 
-//103xxx
 public class AuthException extends AbstractUncheckedException {
     public AuthException(IErrorInfo errorInfo) {
         super(errorInfo);
@@ -8,7 +7,7 @@ public class AuthException extends AbstractUncheckedException {
 
     @Override
     public int getModuleCode() {
-        return 3;
+        return 101;
     }
 
     public enum AuthErrorInfo implements IErrorInfo {

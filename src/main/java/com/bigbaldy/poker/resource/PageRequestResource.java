@@ -1,4 +1,4 @@
-package com.bigbaldy.poker.web.request;
+package com.bigbaldy.poker.resource;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 
 @Data
-public class PageVO {
+public class PageRequestResource {
     @ApiModelProperty(value = "页索引", dataType = "Integer")
     @Min(0)
     private Integer pageIndex;

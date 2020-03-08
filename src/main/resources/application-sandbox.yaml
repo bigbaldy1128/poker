@@ -1,2 +1,5 @@
 server:
   port: 80
+secret:
+  auth:
+    jwt-secret: "iL6&ef-{:lfJs1qovc"

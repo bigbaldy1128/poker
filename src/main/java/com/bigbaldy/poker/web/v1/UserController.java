@@ -4,11 +4,10 @@ import com.bigbaldy.poker.config.SecurityConfiguration;
 import com.bigbaldy.poker.model.User;
 import com.bigbaldy.poker.service.IUserService;
 import com.bigbaldy.poker.util.JWTTokenUtil;
-import com.bigbaldy.poker.web.request.UserLoginRequest;
-import com.bigbaldy.poker.web.response.ResultVO;
-import com.bigbaldy.poker.web.response.UserLoginResponse;
+import com.bigbaldy.poker.resource.UserLoginRequestResource;
+import com.bigbaldy.poker.resource.ResponseResource;
+import com.bigbaldy.poker.resource.UserLoginResponseResource;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import static com.bigbaldy.poker.constant.constant.CURRENT_USER_ATTRIBUTE;
 
@@ -28,8 +27,8 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public ResultVO<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
-        User user = userService.getOrCreate(userLoginRequest.getToken());
+    public ResponseResource<UserLoginResponseResource> login(@RequestBody UserLoginRequestResource userLoginRequestResource) {
+        User user = userService.getOrCreate(userLoginRequestResource.getToken());
         JWTTokenUtil.JWTToken jwtToken =
                 JWTTokenUtil.getJWTToken(
                         user.getId(),
@@ -40,12 +39,12 @@ public class UserController {
         user.setAccessTokenSignature(JWTTokenUtil.getAccessTokenSignature(jwtToken.getAccessToken()));
         userService.saveToDb(user);
 
-        UserLoginResponse ret = new UserLoginResponse(user, jwtToken.getAccessToken());
-        return ResultVO.create(ret);
+        UserLoginResponseResource ret = new UserLoginResponseResource(user, jwtToken.getAccessToken());
+        return ResponseResource.create(ret);
     }
 
     @GetMapping("/test")
-    public ResultVO<User> test(@RequestAttribute(CURRENT_USER_ATTRIBUTE) User currentUser) {
-        return ResultVO.create(currentUser);
+    public ResponseResource<User> test(@RequestAttribute(CURRENT_USER_ATTRIBUTE) User currentUser) {
+        return ResponseResource.create(currentUser);
     }
 }

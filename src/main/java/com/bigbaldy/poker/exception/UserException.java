@@ -7,7 +7,7 @@ public class UserException extends AbstractUncheckedException {
 
     @Override
     public int getModuleCode() {
-        return 1;
+        return 201;
     }
 
     public enum UserErrorInfo implements IErrorInfo{
