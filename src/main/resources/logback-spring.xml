@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <springProfile name="local">
+        <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
+            <encoder>
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <logger level="DEBUG" name="com.bigbaldy"/>
+        <logger level="WARN" name="org.hibernate.SQL"/>
+        <logger level="WARN" name="org.hibernate.type"/>
+        <logger level="INFO" name="org.redisson.connection"/>
+    </springProfile>
+
+    <springProfile name="sandbox">
+        <property name="LOG_FILE" value="/var/log/app.log}"/>
+
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+            <file>${LOG_FILE}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                <fileNamePattern>${LOG_FILE}.%i</fileNamePattern>
+                <minIndex>1</minIndex>
+                <maxIndex>3</maxIndex>
+            </rollingPolicy>
+            <triggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <MaxFileSize>100MB</MaxFileSize>
+            </triggeringPolicy>
+        </appender>
+
+        <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="FILE"/>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="ASYNC_FILE"/>
+        </root>
+
+        <logger level="INFO" name="org.hibernate"/>
+        <logger level="DEBUG" name="com.bigbaldy"/>
+        <logger level="INFO" name="org.redisson"/>
+    </springProfile>
+
+    <springProfile name="production">
+        <property name="LOG_FILE" value="/var/log/app.log}"/>
+
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+            <file>${LOG_FILE}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                <fileNamePattern>${LOG_FILE}.%i</fileNamePattern>
+                <minIndex>1</minIndex>
+                <maxIndex>3</maxIndex>
+            </rollingPolicy>
+            <triggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <MaxFileSize>100MB</MaxFileSize>
+            </triggeringPolicy>
+        </appender>
+
+        <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="FILE"/>
+        </appender>
+
+        <root level="ERROR">
+            <appender-ref ref="ASYNC_FILE"/>
+        </root>
+
+        <logger level="ERROR" name="org.hibernate"/>
+        <logger level="INFO" name="com.bigbaldy"/>
+    </springProfile>
+
+
+</configuration>

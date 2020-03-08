@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-init-sql: SET NAMES utf8mb4
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+    show-sql: true
+swagger:
+  enabled: true
+  title: API Documents
+  description: API documents for poker
+  version: 1.0.0
+  contact:
+    name: wangjinzhao
+  base-package: com.bigbaldy
+  base-path: /**
