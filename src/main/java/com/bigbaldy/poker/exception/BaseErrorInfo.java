@@ -3,7 +3,6 @@ package com.bigbaldy.poker.exception;
 public enum BaseErrorInfo implements IErrorInfo {
     SUCCESS(0),
     FAILURE(1),
-    NO_AUTH(2),
     ;
 
     private int code;
