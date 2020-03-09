@@ -37,7 +37,7 @@ public class UserServiceImpl extends AbstractDbService<User, Long> implements IU
     }
 
     @Override
-    public User getOrCreate(String token) {
+    public User create() {
         User user = new User();
         return saveToDb(user);
     }

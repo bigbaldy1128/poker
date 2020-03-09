@@ -5,6 +5,20 @@ server:
     key-store-password: jkjk7357
     keyStoreType: PKCS12
     keyAlias: poker
+  tomcat:
+    accept-count: 1000
+    max-connections: 10000
+    max-http-post-size: 10240
+    max-threads: 1200
+    min-spare-threads: 1200
+    connection-timeout: 20000
 secret:
   auth:
     jwt-secret: "81X/*dfwqqfgoV5msdgb@3*e#1"
+spring:
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: false

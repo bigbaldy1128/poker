@@ -20,11 +20,17 @@
         <jjwt.version>0.9.1</jjwt.version>
         <guava.version>28.2-jre</guava.version>
         <commons-io>2.6</commons-io>
+        <commons-text>1.8</commons-text>
         <redisson-spring-data.version>3.12.3</redisson-spring-data.version>
         <swagger-spring-boot-starter.version>1.9.1.RELEASE</swagger-spring-boot-starter.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.12</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -41,8 +47,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
+            <artifactId>commons-text</artifactId>
+            <version>${commons-text}</version>
         </dependency>
         <dependency>
             <groupId>org.redisson</groupId>

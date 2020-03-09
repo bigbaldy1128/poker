@@ -1,5 +1,19 @@
 server:
   port: 80
+  tomcat:
+    accept-count: 1000
+    max-connections: 10000
+    max-http-post-size: 10240
+    max-threads: 1200
+    min-spare-threads: 1200
+    connection-timeout: 20000
 secret:
   auth:
     jwt-secret: "iL6&ef-{:lfJs1qovc"
+spring:
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: true
+    show-sql: true
