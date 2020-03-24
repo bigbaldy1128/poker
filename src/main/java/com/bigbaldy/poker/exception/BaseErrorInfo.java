@@ -3,6 +3,7 @@ package com.bigbaldy.poker.exception;
 public enum BaseErrorInfo implements IErrorInfo {
     SUCCESS(0),
     FAILURE(1),
+    HTTP_CLIENT_ERROR(2),
     ;
 
     private int code;

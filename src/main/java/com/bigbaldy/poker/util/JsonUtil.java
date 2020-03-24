@@ -208,9 +208,7 @@ public class JsonUtil {
 
         for (int i = 0; i < json.length; i++) {
             Optional<Map> tmp = toObject(json[i], Map.class);
-            if (tmp.isPresent()) {
-                merged.putAll(tmp.get());
-            }
+            tmp.ifPresent(merged::putAll);
         }
         return toJson(merged);
     }
