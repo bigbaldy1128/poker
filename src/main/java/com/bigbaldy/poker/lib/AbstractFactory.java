@@ -13,12 +13,12 @@ import java.util.Map;
  */
 @Slf4j
 public abstract class AbstractFactory<K, V extends IFactoryItem<K>> {
-    private final static Map<String, AbstractFactory> factoryMap = new HashMap<>();
+    private final static Map<String, AbstractFactory<?, ?>> factoryMap = new HashMap<>();
     private Map<K, V> itemHashMap = new HashMap<>();
 
     protected AbstractFactory() {
         String methodName = Thread.currentThread().getStackTrace()[3].getMethodName();
-        if (methodName.equals("newInstance0")) {
+        if ("newInstance0".equals(methodName)) {
             return;
         }
         String clazzName = this.getClass().getName();
