@@ -12,5 +12,5 @@ import java.util.Optional;
  */
 @Repository
 public interface ThirdPartyUserRepository extends PagingAndSortingRepository<ThirdPartyUser, Long> {
-    Optional<ThirdPartyUser> findByThirdPartyIdAndThirdPartyType(String thirdPartyId, ThirdPartyUserType thirdPartyUserType);
+    Optional<ThirdPartyUser> findByThirdPartyUserIdAndThirdPartyUserType(String thirdPartyUserId, ThirdPartyUserType thirdPartyUserType);
 }

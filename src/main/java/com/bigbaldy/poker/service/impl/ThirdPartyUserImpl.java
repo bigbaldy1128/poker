@@ -24,7 +24,7 @@ public class ThirdPartyUserImpl extends AbstractDbService<ThirdPartyUser, Long> 
 
     @Override
     public Optional<ThirdPartyUser> getByThirdPartyIdAndThirdPartyType(String thirdPartyId, ThirdPartyUserType thirdPartyUserType) {
-        return thirdPartyUserRepository.findByThirdPartyIdAndThirdPartyType(thirdPartyId, thirdPartyUserType);
+        return thirdPartyUserRepository.findByThirdPartyUserIdAndThirdPartyUserType(thirdPartyId, thirdPartyUserType);
     }
 
     @Override
