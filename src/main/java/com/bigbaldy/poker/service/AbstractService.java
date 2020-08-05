@@ -3,6 +3,7 @@ package com.bigbaldy.poker.service;
 import com.bigbaldy.poker.lib.RedisClient;
 import com.bigbaldy.poker.model.BaseModel;
 import com.bigbaldy.poker.util.JsonUtil;
+import com.bigbaldy.poker.util.SpringContextHolder;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;

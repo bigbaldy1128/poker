@@ -603,6 +603,14 @@ public class RedisClient {
         return getTemplate().opsForSet().isMember(key, value);
     }
 
+    public void trimZSetValueFromCache(String key, long maxCount) {
+        long size = getZSetSize(key);
+        long max = size - maxCount - 1;
+        if (max >= 0) {
+            deleteZSetValueByRankFromCache(key, 0, max);
+        }
+    }
+
     public void rename(String oldKey, String newKey) {
         write.rename(oldKey, newKey);
     }
