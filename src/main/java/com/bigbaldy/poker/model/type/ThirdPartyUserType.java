@@ -10,7 +10,7 @@ public enum ThirdPartyUserType {
     UNKNOWN(0),
     WEIXIN(1);
 
-    private Integer value;
+    private final Integer value;
 
     ThirdPartyUserType(int value) {
         this.value = value;
