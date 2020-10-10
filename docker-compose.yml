@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  poker:
+    container_name: poker
+    image: test/poker
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    environment:
+      - "spring.profiles.active=local"

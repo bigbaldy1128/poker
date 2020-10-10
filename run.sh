@@ -1,0 +1,1 @@
+docker run -d -e spring.profiles.active=local --network host --name test test/poker
