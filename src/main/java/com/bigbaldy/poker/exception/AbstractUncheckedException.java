@@ -1,6 +1,7 @@
 package com.bigbaldy.poker.exception;
 
 import com.bigbaldy.poker.resource.ResponseResource;
+import org.springframework.http.HttpStatus;
 
 public abstract class AbstractUncheckedException extends RuntimeException {
     private static final long serialVersionUID = 9185363771965400078L;
@@ -8,6 +9,8 @@ public abstract class AbstractUncheckedException extends RuntimeException {
     private IErrorInfo errorInfo;
 
     protected abstract int getModuleCode();
+
+    public abstract HttpStatus getHttpStatus();
 
     public AbstractUncheckedException(IErrorInfo errorInfo) {
         this(errorInfo, (Throwable) null);
@@ -40,6 +43,13 @@ public abstract class AbstractUncheckedException extends RuntimeException {
     }
 
     public ResponseResource toResult() {
+        return ResponseResource.builder()
+                .code(this.getCode())
+                .message(this.getMessage())
+                .build();
+    }
+
+    public ResponseResource<?> toResponseResource(){
         return ResponseResource.builder()
                 .code(this.getCode())
                 .message(this.getMessage())

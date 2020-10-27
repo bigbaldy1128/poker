@@ -2,30 +2,30 @@ package com.bigbaldy.poker.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class AuthException extends AbstractUncheckedException {
-    public AuthException(IErrorInfo errorInfo) {
+public class InvalidInputArgumentException extends AbstractUncheckedException {
+    public InvalidInputArgumentException(IErrorInfo errorInfo) {
         super(errorInfo);
     }
 
     @Override
     public int getModuleCode() {
-        return 101;
+        return 301;
     }
 
     @Override
     public HttpStatus getHttpStatus() {
-        return HttpStatus.FORBIDDEN;
+        return HttpStatus.BAD_REQUEST;
     }
 
-    public enum AuthErrorInfo implements IErrorInfo {
-        NO_AUTH_HEADER(1, "no authorization header"),
-        AUTH_FAILURE(2, "authorization failure"),
+    public enum ArgumentErrorInfo implements IErrorInfo {
+        ILLEGAL_ARGUMENT(1, null),
+        ILLEGAL_REQUEST(2, null),
         ;
 
         private int code;
         private String message;
 
-        AuthErrorInfo(int code, String message) {
+        ArgumentErrorInfo(int code, String message) {
             this.code = code;
             this.message = message;
         }

@@ -44,10 +44,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AbstractUncheckedException.class)
     public ResponseEntity<ResponseResource<?>> businessExceptionHandler(AbstractUncheckedException e) {
-        ResponseResource<?> responseResource = ResponseResource.builder()
-                .code(e.getCode())
-                .message(e.getMessage())
-                .build();
-        return new ResponseEntity<>(responseResource, HttpStatus.OK);
+        return new ResponseEntity<>(e.toResponseResource(), e.getHttpStatus());
     }
 }
