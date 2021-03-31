@@ -18,7 +18,7 @@
         <java.version>1.8</java.version>
         <lombok.version>1.18.4</lombok.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <guava.version>28.2-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <commons-io>2.6</commons-io>
         <commons-text>1.8</commons-text>
         <redisson-spring-data.version>3.12.3</redisson-spring-data.version>
