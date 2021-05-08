@@ -10,7 +10,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -67,7 +66,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     });
 
     @Override
-    public Optional<T> get(@NotNull ID id) {
+    public Optional<T> get(ID id) {
 
         String json = getFromCache(id, getModelClass());
 
@@ -91,7 +90,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public Optional<T> getFromDb(@NotNull ID id) {
+    public Optional<T> getFromDb(ID id) {
         return findFromDbById(id);
     }
 
@@ -106,7 +105,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public Map<ID, T> getMap(@NotNull List<ID> ids) {
+    public Map<ID, T> getMap(List<ID> ids) {
         List<T> ret = get(ids);
         Map<ID, T> map = new LinkedHashMap<>();
         ret.forEach(e -> {
@@ -116,7 +115,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public Map<ID, T> getMapFromDb(@NotNull List<ID> ids) {
+    public Map<ID, T> getMapFromDb(List<ID> ids) {
         List<T> ret = getFromDb(ids);
         Map<ID, T> map = new LinkedHashMap<>();
         ret.forEach(e -> {
@@ -136,7 +135,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public List<T> get(@NotNull List<ID> ids) {
+    public List<T> get(List<ID> ids) {
 
         if (ids.isEmpty()) {
             return Collections.EMPTY_LIST;
@@ -164,12 +163,12 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public List<T> getFromDb(@NotNull List<ID> ids) {
-        return (List<T>)findAllFromDbById(ids);
+    public List<T> getFromDb(List<ID> ids) {
+        return (List<T>) findAllFromDbById(ids);
     }
 
     @Override
-    public List<T> getOnlyFromCache(@NotNull List<ID> ids) {
+    public List<T> getOnlyFromCache(List<ID> ids) {
         if (ids.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
@@ -262,7 +261,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public T save(@NotNull T t) {
+    public T save(T t) {
         t = saveToDb(t);
         setToCache(t);
         return t;
@@ -304,18 +303,18 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public void remove(@NotNull ID id) {
+    public void remove(ID id) {
         deleteFromCache(getCacheKeyFromId(id, getModelClass()));
         deleteFromDbById(id);
     }
 
     @Override
-    public void removeFromDb(@NotNull ID id) {
+    public void removeFromDb(ID id) {
         deleteFromDbById(id);
     }
 
     @Override
-    public void remove(@NotNull List<T> t) {
+    public void remove(List<T> t) {
         t.removeIf(e -> e == null);
         if (t.isEmpty()) {
             return;
@@ -338,11 +337,11 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
     @Override
-    public void removeFromDb(@NotNull List<T> t) {
+    public void removeFromDb(List<T> t) {
         deleteFromDb(t);
     }
 
-    private void batchRemove(@NotNull List<T> t) {
+    private void batchRemove(List<T> t) {
         List<String> cacheIds = t.stream()
                 .map(e -> getCacheKeyFromId(e.getId(), (Class<T>) e.getClass()))
                 .collect(Collectors.toList());
@@ -350,7 +349,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         deleteFromDb(t);
     }
 
-    protected void setToCache(@NotNull T t, long ttl) {
+    protected void setToCache(T t, long ttl) {
         String key = getCacheKeyFromId(t.getId(), (Class<T>) t.getClass());
         Optional<String> json = JsonUtil.toJson(t);
 
@@ -359,12 +358,12 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         }
     }
 
-    protected void setToCache(@NotNull T t) {
+    protected void setToCache(T t) {
 
         setToCache(t, getCacheTTL());
     }
 
-    protected void setToCache(@NotNull List<T> list) {
+    protected void setToCache(List<T> list) {
         if (list.isEmpty()) {
             return;
         }
@@ -375,11 +374,11 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         getRedisClient().set(keyValues, getCacheTTL());
     }
 
-    protected void setToCache(@NotNull Map<String, String> keyValues) {
+    protected void setToCache(Map<String, String> keyValues) {
         getRedisClient().set(keyValues, getCacheTTL());
     }
 
-    protected void setToCache(@NotNull String key, String value, long ttl) {
+    protected void setToCache(String key, String value, long ttl) {
         if (key.isEmpty()) {
             return;
         }
@@ -387,11 +386,11 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         getRedisClient().set(key, value, ttl);
     }
 
-    protected void setToCache(@NotNull String key, String value) {
+    protected void setToCache(String key, String value) {
         setToCache(key, value, getCacheTTL());
     }
 
-    protected boolean deleteFromCache(@NotNull String key) {
+    protected boolean deleteFromCache(String key) {
         return getRedisClient().delete(key);
     }
 
@@ -400,7 +399,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         return true;
     }
 
-    protected Optional<String> getFromCache(@NotNull String key) {
+    protected Optional<String> getFromCache(String key) {
         String result = getRedisClient().get(key);
         if (result == null) {
             return Optional.empty();
@@ -409,20 +408,20 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         return Optional.of(result);
     }
 
-    protected String getFromCache(@NotNull ID id, Class<T> clz) {
+    protected String getFromCache(ID id, Class<T> clz) {
         String cacheKey = getCacheKeyFromId(id, clz);
         String json = getRedisClient().get(cacheKey);
         return json;
     }
 
-    protected List<String> getFromCache(@NotNull Collection<String> keys) {
+    protected List<String> getFromCache(Collection<String> keys) {
 
         List<String> ret = getFromCacheContainsNull(keys);
         ret.removeIf(e -> e == null);
         return ret;
     }
 
-    protected List<String> getFromCacheContainsNull(@NotNull Collection<String> keys) {
+    protected List<String> getFromCacheContainsNull(Collection<String> keys) {
         if (keys.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
@@ -431,7 +430,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
     }
 
 
-    protected List<String> getFromCache(@NotNull List<ID> ids, Class<T> clz) {
+    protected List<String> getFromCache(List<ID> ids, Class<T> clz) {
         if (ids.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
@@ -482,7 +481,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         getRedisClient().addSetValueToCache(key, value, ttl);
     }
 
-    public void addSetValueToCache(String key, @NotNull Set<String> ids) {
+    public void addSetValueToCache(String key, Set<String> ids) {
         int step = 500;
         int idsSize = ids.size();
         List<String> list = new ArrayList<>(ids);
@@ -506,7 +505,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         return getRedisClient().getSetFromCache(key);
     }
 
-    public boolean existSetValueFromCache(String key, @NotNull String value) {
+    public boolean existSetValueFromCache(String key, String value) {
         return getRedisClient().existSetValueFromCache(key, value);
     }
 
@@ -526,7 +525,7 @@ public abstract class AbstractService<T extends BaseModel<ID>, ID> implements IS
         return sb.toString();
     }
 
-    private String getCacheKeyFromId(@NotNull ID id, Class<T> clz) {
+    private String getCacheKeyFromId(ID id, Class<T> clz) {
         StringBuilder sb = new StringBuilder();
         sb.append("id:").append(id.toString());
         return getCacheKey(sb.toString(), clz);

@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class JWTTokenUtil {
         return "";
     }
 
-    public static JWTToken getJWTToken(@NotNull Long userId, String jwtSecret,
+    public static JWTToken getJWTToken(Long userId, String jwtSecret,
                                        long accessTokenTTLInSeconds,
                                        long refreshTokenTTLInSeconds) {
         Map<String, Object> additionalClaims = new HashMap<>();
@@ -42,37 +41,37 @@ public class JWTTokenUtil {
                 refreshTokenTTLInSeconds);
     }
 
-    public static Object getClaimFromAuthorization(@NotNull String authorization,
-                                                   @NotNull String claimKey, @NotNull String jwtSecret) {
+    public static Object getClaimFromAuthorization(String authorization,
+                                                   String claimKey, String jwtSecret) {
         return getClaimFromAccessToken(getTokenString(authorization), claimKey, jwtSecret);
     }
 
-    private static Claims getClaimBodyFromAccessToken(@NotNull String accessToken,
-                                                      @NotNull String claimKey, @NotNull String jwtSecret) {
+    private static Claims getClaimBodyFromAccessToken(String accessToken,
+                                                      String claimKey, String jwtSecret) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret.getBytes())
                 .parseClaimsJws(accessToken)
                 .getBody();
     }
 
-    public static Date getExpireInFromAuthorization(@NotNull String accessToken,
-                                                    @NotNull String claimKey, @NotNull String jwtSecret) {
+    public static Date getExpireInFromAuthorization(String accessToken,
+                                                    String claimKey, String jwtSecret) {
 
         return getClaimBodyFromAccessToken(getTokenString(accessToken), claimKey, jwtSecret).getExpiration();
     }
 
-    public static Object getClaimFromAccessToken(@NotNull String accessToken,
-                                                 @NotNull String claimKey, @NotNull String jwtSecret) {
+    public static Object getClaimFromAccessToken(String accessToken,
+                                                 String claimKey, String jwtSecret) {
 
         return getClaimBodyFromAccessToken(accessToken, claimKey, jwtSecret).get(claimKey);
     }
 
-    public static boolean hasJWTTokenInAuthorization(@NotNull String authorization) {
+    public static boolean hasJWTTokenInAuthorization(String authorization) {
         return authorization.startsWith(TOKEN_TYPE);
     }
 
     @Nullable
-    public static JWTToken refreshToken(@NotNull String authorization, @NotNull String jwtSecret,
+    public static JWTToken refreshToken(String authorization, String jwtSecret,
                                         long accessTokenTTL, long refreshTokenTTL) {
         Object value = getClaimFromAuthorization(authorization, USER_CLAIM_KEY,
                 jwtSecret);
@@ -87,7 +86,7 @@ public class JWTTokenUtil {
         return null;
     }
 
-    public static JWTToken getJWTToken(@NotNull Map<String, Object> additionalClaims, String subject,
+    public static JWTToken getJWTToken(Map<String, Object> additionalClaims, String subject,
                                        String jwtSecret, Long accessTokenTTLInSeconds,
                                        Long refreshTokenTTLInSeconds) {
         long now = System.currentTimeMillis();

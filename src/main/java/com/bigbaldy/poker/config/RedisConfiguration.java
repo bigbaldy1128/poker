@@ -10,41 +10,44 @@ import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
 import org.redisson.config.ReadMode;
+import org.redisson.config.SubscriptionMode;
 import org.redisson.config.TransportMode;
 import org.redisson.spring.data.connection.RedissonConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Configuration
-@ConfigurationProperties(prefix = "redis")
-@Import(ScriptLoader.class)
-@Getter
-@Setter
-public class RedisConfiguration {
+//@Configuration
+//@ConfigurationProperties(prefix = "redis")
+//@Import(ScriptLoader.class)
+//@Getter
+//@Setter
+public class RedisConfiguration implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisConfiguration.class);
 
-    private Main main;
+    private final ConfigurableApplicationContext applicationContext;
+    private final ScriptLoader scriptLoader;
 
-    @Bean(name = "mainRedissonClient")
-    @ConditionalOnProperty(name = "redis.main.end-point")
-    public RedissonClient mainRedissonClient() {
-        return redissonClient(main);
+    private List<Redis> config;
+
+    public RedisConfiguration(ConfigurableApplicationContext applicationContext,
+                              ScriptLoader scriptLoader) {
+        this.applicationContext = applicationContext;
+        this.scriptLoader = scriptLoader;
     }
 
     private RedissonClient redissonClient(Redis redis) {
@@ -59,28 +62,17 @@ public class RedisConfiguration {
                     .useClusterServers()
                     .setScanInterval(2000)
                     .setReadMode(ReadMode.MASTER)
+                    .setSubscriptionMode(SubscriptionMode.SLAVE)
+                    .setPingConnectionInterval(10000)//10秒
+                    .setSubscriptionConnectionPoolSize(64)
+                    .setSubscriptionsPerConnection(50)
                     .addNodeAddress(endpointList.toArray(new String[0]));
             return Redisson.create(config);
         }
     }
 
     private List<String> parseRedissonEndpoints(Redis redis) {
-        return Arrays.stream(redis.endPoint).map(p -> "redis://" + p).collect(Collectors.toList());
-    }
-
-    @Bean(name = "mainRedisClient")
-    @ConditionalOnProperty(name = "redis.main.end-point")
-    public RedisClient mainRedisClient(
-            @Qualifier("mainRedisTemplate") RedisTemplate<String, String> write,
-            @Qualifier("mainRedissonClient") RedissonClient redissonClient,
-            @Autowired ScriptLoader scriptLoader) {
-        return new RedisClient(write, redissonClient, scriptLoader);
-    }
-
-    @Bean("mainRedisTemplate")
-    @ConditionalOnProperty(name = "redis.main.end-point")
-    public RedisTemplate<String, String> userRedissonTemplate(@Qualifier("mainRedissonClient") RedissonClient redissonClient) {
-        return getRedisTemplate(redissonClient);
+        return Arrays.stream(redis.endPoints).map(p -> "redis://" + p).collect(Collectors.toList());
     }
 
     private RedisTemplate<String, String> getRedisTemplate(RedissonClient redissonClient) {
@@ -92,24 +84,34 @@ public class RedisConfiguration {
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(new StringRedisSerializer());
+        template.afterPropertiesSet();
         return template;
     }
 
-    public static class Main extends Redis {
-
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) applicationContext.getBeanFactory();
+        for (Redis redis : config) {
+            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(RedisClient.class, () -> {
+                RedissonClient redissonClient = redissonClient(redis);
+                RedisTemplate<String, String> redisTemplate = getRedisTemplate(redissonClient);
+                return new RedisClient(redisTemplate, redissonClient, scriptLoader);
+            });
+            BeanDefinition BeanDefinition = beanDefinitionBuilder.getRawBeanDefinition();
+            for (String name : redis.getNames()) {
+                String beanName = name + "RedisClient";
+                beanDefinitionRegistry.registerBeanDefinition(beanName, BeanDefinition);
+                logger.info("register {}", beanName);
+            }
+        }
     }
 
     @ToString
     @Getter
     @Setter
-    public abstract static class Redis {
-
-        protected String[] endPoint;
-
-        @Min(0)
-        @Max(12)
-        protected int database;
-
+    public static class Redis {
+        private String[] names;
+        private String[] endPoints;
     }
 
 }

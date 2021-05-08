@@ -9,7 +9,7 @@
             </encoder>
         </appender>
 
-        <root level="INFO">
+        <root level="DEBUG">
             <appender-ref ref="CONSOLE"/>
         </root>
 
@@ -20,7 +20,7 @@
     </springProfile>
 
     <springProfile name="sandbox">
-        <property name="LOG_FILE" value="/var/log/app.log}"/>
+        <property name="LOG_FILE" value="/var/log/app/app.log}"/>
 
         <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
             <encoder>
@@ -52,7 +52,7 @@
     </springProfile>
 
     <springProfile name="production">
-        <property name="LOG_FILE" value="/var/log/app.log}"/>
+        <property name="LOG_FILE" value="/var/log/app/app.log}"/>
 
         <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
             <encoder>

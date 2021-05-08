@@ -9,5 +9,6 @@ secret:
   auth:
     jwt-secret: "123456789"
 #redis:
-#  main:
-#    end-point: localhost:6379
+#  config:
+#    - names: user
+#      endPoints: localhost:6379

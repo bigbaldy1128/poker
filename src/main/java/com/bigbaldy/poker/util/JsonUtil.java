@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
@@ -82,7 +81,7 @@ public class JsonUtil {
      * @param json  JSON串
      * @param clazz clazz 指定的对象类型
      */
-    public static <T> Optional<T> toObject(@NotNull String json, Class<T> clazz) {
+    public static <T> Optional<T> toObject(String json, Class<T> clazz) {
         try {
             return Optional.of(getDefaultObjectMapper().readValue(json, clazz));
         } catch (IOException e) {
@@ -91,7 +90,7 @@ public class JsonUtil {
         }
     }
 
-    public static <T> List<T> toObjects(@NotNull List<String> jsons, Class<T> clazz) {
+    public static <T> List<T> toObjects(List<String> jsons, Class<T> clazz) {
         List<T> result = new ArrayList<>();
         for (String json : jsons) {
             toObject(json, clazz).ifPresent(result::add);
@@ -105,7 +104,7 @@ public class JsonUtil {
      * @param json      JSON串
      * @param reference clazz 指定的对象类型
      */
-    public static <T> Optional<T> toObject(@NotNull String json, TypeReference<T> reference) {
+    public static <T> Optional<T> toObject(String json, TypeReference<T> reference) {
         try {
             return Optional.of(objectMapper.readValue(json, reference));
         } catch (IOException e) {
@@ -202,7 +201,7 @@ public class JsonUtil {
     }
 
 
-    public static Optional<String> merge(@NotNull String... json) {
+    public static Optional<String> merge(String... json) {
 
         Map<String, Object> merged = new HashMap<>();
 

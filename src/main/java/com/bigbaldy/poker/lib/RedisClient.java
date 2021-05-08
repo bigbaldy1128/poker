@@ -19,7 +19,6 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 
-import javax.validation.constraints.NotNull;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +78,7 @@ public class RedisClient {
         return key;
     }
 
-    public void set(@NotNull String key, String value, long ttl) {
+    public void set(String key, String value, long ttl) {
         write.opsForValue().set(key, value, ttl, TimeUnit.SECONDS);
     }
 
@@ -117,16 +116,16 @@ public class RedisClient {
     }
 
 
-    public Boolean setIfAbsent(@NotNull String key, String value) {
+    public Boolean setIfAbsent(String key, String value) {
         return write.opsForValue().setIfAbsent(key, value);
     }
 
-    public Boolean setIfAbsent(@NotNull String key, @NotNull String value, long ttl) {
+    public Boolean setIfAbsent(String key, String value, long ttl) {
         RBucket<String> rBucket = redissonClient.getBucket(key);
         return rBucket.trySet(value, ttl, TimeUnit.MILLISECONDS);
     }
 
-    public void set(@NotNull Map<String, String> keyValues, long ttl) {
+    public void set(Map<String, String> keyValues, long ttl) {
         RBatch batch = redissonClient.createBatch();
         keyValues.forEach((k, v) -> {
             RBucketAsync<String> rBucketAsync = batch.getBucket(k);
@@ -136,11 +135,11 @@ public class RedisClient {
         batch.execute();
     }
 
-    public String get(@NotNull String key) {
+    public String get(String key) {
         return getTemplate().opsForValue().get(key);
     }
 
-    public List<String> get(@NotNull Collection<String> keys) {
+    public List<String> get(Collection<String> keys) {
         RBatch batch = redissonClient.createBatch();
         keys.forEach(p -> batch.getBucket(p).getAsync());
         return batch.execute().getResponses().stream().map(p -> {
@@ -151,7 +150,7 @@ public class RedisClient {
         }).collect(Collectors.toList());
     }
 
-    public Boolean delete(@NotNull String key) {
+    public Boolean delete(String key) {
         return write.delete(key);
     }
 
@@ -268,7 +267,7 @@ public class RedisClient {
         });
     }
 
-    public void addSetValueToCache(String key, @NotNull Set<String> ids, long ttl) {
+    public void addSetValueToCache(String key, Set<String> ids, long ttl) {
         if (ids.isEmpty()) {
             return;
         }
@@ -551,7 +550,7 @@ public class RedisClient {
         return getTemplate().opsForZSet().score(key, fieldKey);
     }
 
-    public boolean existZSetValueFromCache(String key, @NotNull String k) {
+    public boolean existZSetValueFromCache(String key, String k) {
         return getZSetValueWithScore(key, k) != null;
     }
 
@@ -599,7 +598,7 @@ public class RedisClient {
         return redissonClient.getSet(key).random(num).stream().map(Object::toString).collect(Collectors.toSet());
     }
 
-    public boolean existSetValueFromCache(String key, @NotNull String value) {
+    public boolean existSetValueFromCache(String key, String value) {
         return getTemplate().opsForSet().isMember(key, value);
     }
 
