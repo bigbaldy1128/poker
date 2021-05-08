@@ -19,7 +19,7 @@
         <lombok.version>1.18.4</lombok.version>
         <jjwt.version>0.9.1</jjwt.version>
         <guava.version>28.2-jre</guava.version>
-        <commons-io>2.6</commons-io>
+        <commons-io>2.7</commons-io>
         <commons-text>1.8</commons-text>
         <redisson-spring-data.version>3.12.3</redisson-spring-data.version>
         <swagger-spring-boot-starter.version>1.9.1.RELEASE</swagger-spring-boot-starter.version>
