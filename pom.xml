@@ -24,7 +24,7 @@
         <redisson-spring-data.version>3.12.3</redisson-spring-data.version>
         <swagger-spring-boot-starter.version>1.9.1.RELEASE</swagger-spring-boot-starter.version>
         <springfox-swagger.version>2.9.2</springfox-swagger.version>
-        <httpclient.version>4.5.12</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <dependencies>
